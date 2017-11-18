@@ -9,6 +9,7 @@ var users = require('./routes/users');
 const mongoose = require('mongoose');
 require('./config/database-setup');
 require('./config/passport.js');
+const authRoutes = require('./routes/auth-routes');
 const passport = require('passport');
 const session = require('express-session');
 var app = express();
@@ -31,13 +32,13 @@ app.use(
     saveUninitialized: true
   })
 );
-app.use(passport.initialized());
+app.use(passport.initialize());
 app.use(passport.session());
 
 //Routes--------------------------------
 app.use('/', index);
 app.use('/users', users);
-
+app.use('/', authRoutes);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
