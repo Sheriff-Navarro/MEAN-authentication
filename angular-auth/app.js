@@ -8,13 +8,15 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 const mongoose = require('mongoose');
 require('./config/database-setup');
-
+require('./config/passport.js');
+const passport = require('passport');
+const session = require('express-session');
 var app = express();
-
+//------------------------------------------------
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+//------------------------------------------
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -22,7 +24,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  session({
+    secret: 'string is to avoid a warning',
+    resave: true,
+    saveUninitialized: true
+  })
+);
+app.use(passport.initialized());
+app.use(passport.session());
 
+//Routes--------------------------------
 app.use('/', index);
 app.use('/users', users);
 
